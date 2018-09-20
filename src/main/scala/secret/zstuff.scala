@@ -18,6 +18,8 @@ object zstuff {
 
   val tutorialHarness: Harness[Uses[Unit]] = sneakyHarness(pureHarness)
 
+  def combine: (Result, Result) => Result = Result.combine
+
   def assertEqual[A: Eq](a1: A, a2: A): Result =
     assert(a1 === a2)
 

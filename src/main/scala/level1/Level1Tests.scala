@@ -1,5 +1,6 @@
 package level1
 
+import cats.effect.IO
 import cats.implicits._
 import fs2.Stream
 import secret.zstuff._
@@ -8,9 +9,13 @@ import testz._
 object Level1Tests {
 
   /**
-    * [[http://fs2.io/guide.html#building-streams Building streams]]
+    * Level 1. Building streams. Basic operations
     *
-    * Read the section and fix the tests.
+    * 1. Read the sections
+    * [[http://fs2.io/guide.html#building-streams Building streams]]
+    * [[http://fs2.io/guide.html#basic-stream-operations Basic stream operations]]
+    *
+    * 2. Fix the tests
     */
   def tests[T](harness: Harness[T]): T = {
     import harness._
@@ -18,19 +23,82 @@ object Level1Tests {
       test("example of successful test") { () =>
         assertEqual(
           Stream.emits(List(1, 2, 3)).toList, // actual
-          List(1, 2, 3)                       // expected
+          List(1, 2, 3) // expected
         )
       },
       test("++") { () =>
         assertEqual(
-          (Stream(1, 2, 3) ++ Stream(4, 5)).toList,
+          (Stream.emit(10) ++ Stream(20, 30, 40) ++ Stream.emits(Vector(50, 60))).toVector,
           ??? // fix me and others
         )
       },
-      test("filter") { () =>
+      test("map") { () =>
         assertEqual(
-          Stream(1, 2, 3).filter(_ % 2 != 0).toList,
+          Stream(1, 2, 3).map(_.toString).toList,
           ???
+        )
+      },
+      test("fold") { () =>
+        assertEqual(
+          Stream.range(1, 5).fold(0)(_ + _).toList,
+          ???
+        )
+      },
+      test("take") { () =>
+        assertEqual(
+          Stream.range(1, 5).take(2).toList,
+          ???
+        )
+      },
+      test("flatMap") { () =>
+        assertEqual(
+          Stream(1, 2, 3).flatMap(i => Stream(i, -i)).toList,
+          ???
+        )
+      },
+      test(">>") { () =>
+        assertEqual(
+          // Alias for `flatMap(_ => s2)`
+          (Stream("ignore", "me") >> Stream("42")).toList,
+          ???
+        )
+      },
+      test("eval") { () =>
+        assertEqual(
+          Stream.eval(IO(42)).compile.toList.unsafeRunSync(),
+          ???
+        )
+      },
+      test("eval + effect") { () =>
+        // as an effect, stream writes to a variable
+        var cache = ""
+        val s1 = Stream.eval(IO {
+          cache = "new value"
+          "42"
+        })
+
+        combine(
+          assertEqual(
+            s1.compile.toList.unsafeRunSync(),
+            ???
+          ),
+          assert(cache.contains("new value"))
+        )
+      },
+      test(">> + effect") { () =>
+        // as an effect, stream writes to a variable
+        var cache = ""
+        val s1 = Stream.eval(IO {
+          cache = "new value"
+          "ignore"
+        })
+
+        combine(
+          assertEqual(
+            (s1 >> Stream("42")).compile.toList.unsafeRunSync(),
+            ???
+          ),
+          assert(cache.contains("new value"))
         )
       }
     )
@@ -42,7 +110,7 @@ object Level1Tests {
     */
   def main(args: Array[String]): Unit = {
     val output = tests(tutorialHarness)((), Nil)
-    println("level 1. Results")
+    println("Level 1. Results")
     output.print()
   }
 }
