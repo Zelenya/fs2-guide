@@ -5,7 +5,7 @@ import fs2.{Pipe, Pull, Stream}
 object impl {
 
   /**
-    * Emits the first `n` elements of this stream.
+    * Emits the first `n` elements of this stream
     */
   def takeS[F[_], O](n: Long): Pipe[F, O, O] =
     in => in.scanChunksOpt(n) { n =>
@@ -17,7 +17,7 @@ object impl {
     }
 
   /**
-    * Emits the first `n` elements of this stream.
+    * Emits the first `n` elements of this stream
     */
   def takeP[F[_], O](n: Long): Pipe[F, O, O] = {
     def go(s: Stream[F, O], n: Long): Pull[F, O, Unit] = {

@@ -17,5 +17,5 @@ object impl {
   /**
     * Left fold which outputs all intermediate results
     */
-  def scan[F[_], O, O2](s: Stream[F, O])(z: O2)(f: (O2, O) => O2): Stream[F, O2] = s.scan(z)(f)
+  def scan[F[_], O, O2](s: Stream[F, O])(z: O2)(f: (O2, O) => O2): Stream[F, O2] = ???
 }
