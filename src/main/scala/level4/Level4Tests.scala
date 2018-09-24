@@ -10,7 +10,7 @@ import testz._
 object Level4Tests {
 
   /**
-    * Level 4.
+    * Level 4. Building streams. Advanced
     *
     * Fix the method implementations in [[level4.impl]]
     */

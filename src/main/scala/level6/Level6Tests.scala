@@ -9,7 +9,7 @@ import testz._
 object Level6Tests {
 
   /**
-    * Level 6. Statefully transforming streams
+    * Level 6. Statefully transforming streams. Advanced
     *
     * 1. Read the section
     * [[http://fs2.io/guide.html#statefully-transforming-streams Statefully transforming streams]]
