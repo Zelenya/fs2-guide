@@ -22,7 +22,8 @@ object Level8Tests {
     section(
       namedSection("evalMapAccumulate")(
         test("maps accumulates") { () =>
-          val s1 = evalMapAccumulate(Stream.range(1, 5).covary[IO])(0)((acc, i) => IO((i, acc + i)))
+          val s0 = Stream.range(1, 5).covary[IO]
+          val s1 = evalMapAccumulate(s0)(0)((acc, i) => IO((i, acc + i)))
 
           assertEqual(
             s1.compile.toList.unsafeRunSync,
@@ -32,8 +33,8 @@ object Level8Tests {
         test("evals") { () =>
           var cache = ' '
 
-          val s1 = Stream("some", "random", "text").covary[IO]
-            .evalMapAccumulate(0)((acc, s) => IO {
+          val s0 = Stream("some", "random", "text").covary[IO]
+          val s1 = evalMapAccumulate(s0)(0)((acc, s) => IO {
               cache = s.head
               (acc + s.length, s.head)
             })
