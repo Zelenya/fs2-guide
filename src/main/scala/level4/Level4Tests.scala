@@ -64,19 +64,19 @@ object Level4Tests {
       ),
       namedSection("attempt")(
         test("catches") { () =>
-          val s1 = Stream(1, 2, 3).attempt.toList
+          val s1 = attempt(Stream(1, 2, 3))
 
           assertEqual(
-            s1.map(_.leftMap(_.getMessage)),
+            s1.toList.map(_.leftMap(_.getMessage)),
             List(1.asRight, 2.asRight, 3.asRight)
           )
         },
         test("catches errors") { () =>
           val error = "boom!"
-          val s1 = (Stream(1, 2) ++ (throw new Exception(error))).attempt.toList
+          val s1 = attempt(Stream(1, 2) ++ (throw new Exception(error)))
 
           assertEqual(
-            s1.map(_.leftMap(_.getMessage)),
+            s1.toList.map(_.leftMap(_.getMessage)),
             List(1.asRight, 2.asRight, error.asLeft)
           )
         }
